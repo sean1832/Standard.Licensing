@@ -50,12 +50,13 @@ namespace Standard.Licensing.Validation
         /// Validates if the license has been expired.
         /// </summary>
         /// <param name="validationChain">The current <see cref="IStartValidationChain"/>.</param>
+        /// <param name="now">The current datetime to compare with</param>
         /// <returns>An instance of <see cref="IStartValidationChain"/>.</returns>
-        public static IValidationChain ExpirationDate(this IStartValidationChain validationChain)
+        public static IValidationChain ExpirationDate(this IStartValidationChain validationChain, DateTime now)
         {
             var validationChainBuilder = (validationChain as ValidationChainBuilder);
             var validator = validationChainBuilder.StartValidatorChain();
-            validator.Validate = license => license.Expiration > DateTime.Now;
+            validator.Validate = license => license.Expiration > now;
 
             validator.FailureResult = new LicenseExpiredValidationFailure()
             {
@@ -64,6 +65,16 @@ namespace Standard.Licensing.Validation
             };
 
             return validationChainBuilder;
+        }
+
+        /// <summary>
+        /// Validates if the license has been expired. Default to current datetime.
+        /// </summary>
+        /// <param name="validationChain">The current <see cref="IStartValidationChain"/>.</param>
+        /// <param name="now">The current datetime to compare with</param>
+        public static IValidationChain ExpirationDate(this IStartValidationChain validationChain)
+        {
+            return ExpirationDate(validationChain, DateTime.Now);
         }
 
         /// <summary>
