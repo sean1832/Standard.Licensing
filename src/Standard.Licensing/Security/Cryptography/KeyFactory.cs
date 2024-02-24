@@ -44,8 +44,7 @@ namespace Standard.Licensing.Security.Cryptography
         public static string ToEncryptedPrivateKeyString(AsymmetricKeyParameter key, string passPhrase)
         {
             var salt = new byte[16];
-            var secureRandom = SecureRandom.GetInstance("SHA256PRNG");
-            secureRandom.SetSeed(SecureRandom.GetSeed(16)); //See Bug #135
+            var secureRandom = SecureRandom.GetInstance("SHA256PRNG"); // <-- constructor is automatically seeded
             secureRandom.NextBytes(salt);
 
             return
